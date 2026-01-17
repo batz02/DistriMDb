@@ -4,7 +4,6 @@ import pickle
 import sys
 
 def get_available_replicas(ns):
-    """Interroga il Name Server per trovare tutti i servizi 'movie.finder.*'"""
     all_objects = ns.list(prefix="movie.finder.")
     return list(all_objects.items())
 
