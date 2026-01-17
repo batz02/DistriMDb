@@ -15,7 +15,6 @@ class TestMovieSearchEngine(unittest.TestCase):
             {"id": 102, "title": "Titanic", "plot": "Una nave affonda nell'oceano."}
         ]
         
-        # Matrix: [0.9, 0.1], Titanic: [0.1, 0.9]
         self.fake_vectors = np.array([
             [0.9, 0.1],
             [0.1, 0.9]

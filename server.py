@@ -151,11 +151,9 @@ class MovieSearchEngine(object):
 def start_server():
     print("--- AVVIO SERVER ---")
     
-    # 1. Connettiamoci al Name Server (con gestione errori robusta)
     try:
         ns = Pyro5.api.locate_ns()
     except (Pyro5.errors.NamingError, OSError, Exception) as e:
-        # Ora catturiamo anche OSError (il tuo Errno 65) e qualsiasi altro crash
         print(f"\n!!! ERRORE CRITICO: Name Server non raggiungibile.")
         print(f"    Dettaglio errore: {e}")
         print("-------------------------------------------------------")
@@ -165,17 +163,13 @@ def start_server():
         print("-------------------------------------------------------")
         return
 
-    # 2. Logica di scelta del nome
     my_name = None
     
     if len(sys.argv) > 1:
-        # Se l'utente ha specificato un nome, usiamo quello (es: python server.py Pippo)
         my_name = sys.argv[1]
     else:
-        # Se nessun argomento, generiamo un nome univoco (replica_1, replica_2, ...)
         print(">> Nessun nome specificato. Cerco il primo nome disponibile...")
-        
-        # Chiediamo al NS chi esiste già
+    
         existing_services = ns.list(prefix="movie.finder.")
         
         counter = 1
@@ -184,10 +178,8 @@ def start_server():
             full_service_name = f"movie.finder.{candidate_name}"
             
             if full_service_name in existing_services:
-                # Se esiste già, incrementiamo e riproviamo
                 counter += 1
             else:
-                # Trovato un buco libero!
                 my_name = candidate_name
                 break
     

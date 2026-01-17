@@ -6,7 +6,7 @@ import sys
 def get_available_replicas(ns):
     """Interroga il Name Server per trovare tutti i servizi 'movie.finder.*'"""
     all_objects = ns.list(prefix="movie.finder.")
-    return list(all_objects.items()) # Restituisce la lista degli URI
+    return list(all_objects.items())
 
 def main():
     try:
@@ -32,7 +32,6 @@ def main():
         vector_sparse = vectorizer.transform([query])
         vector_list = vector_sparse.toarray()[0].tolist()
 
-        # --- LOGICA DI FAULT TOLERANCE ---
         replicas_list = get_available_replicas(ns)
         if not replicas_list:
             print("NESSUN SERVER DISPONIBILE! Assicurati di aver avviato le repliche.")
@@ -41,17 +40,15 @@ def main():
         response = None
         used_replica = None
 
-        # Tentativo di connessione a cascata (Round Robin / Failover)
         for name,uri in replicas_list:
             clean_name = name.split(".")[-1]
             print(f" -> [Network] Provo a contattare replica: {clean_name} ...")
             try:
-                # Creiamo il proxy al volo per ogni replica
                 with Pyro5.api.Proxy(uri) as server:
                     response = server.search(vector_list)
-                    used_replica = server # Teniamo il riferimento per l'eventuale voto
                     print(f"    [SUCCESSO] Risposta ricevuta da {clean_name}!")
-                    break # Se funziona, esci dal ciclo for
+                    break
+
             except Pyro5.errors.CommunicationError:
                 print(f"    [FALLITO] {clean_name} Questa replica non risponde. Passo alla prossima...")
                 continue
@@ -64,10 +61,8 @@ def main():
                 print(f"Likes:  {response['votes']}")
                 
                 if input("Ti piace? (s/n): ").lower() == 's':
-                    # --- NUOVA LOGICA DI VOTO ROBUSTA ---
                     vote_success = False
                     
-                    # Riscansioniamo le repliche perché la situazione rete potrebbe essere cambiata
                     current_replicas = get_available_replicas(ns)
                     
                     print(" -> [Client] Invio voto a una replica disponibile...")
@@ -76,17 +71,16 @@ def main():
                         clean_name = name.split(".")[-1]
                         try:
                             with Pyro5.api.Proxy(uri) as server:
-                                # Inviamo l'ID del film trovato, non importa a quale server
                                 new_votes = server.upvote_movie(response['id'])
                                 print(f" -> [SUCCESSO] Voto registrato da {clean_name}! Totale: {new_votes}")
                                 vote_success = True
-                                break # Voto andato, usciamo dal ciclo
+                                break 
                         except Pyro5.errors.CommunicationError:
                             print(f"    [FAIL] {clean_name} non risponde, provo il prossimo...")
                     
                     if not vote_success:
                         print("!!! ERRORE CRITICO: Impossibile salvare il voto. Nessun server raggiungibile.")
-                    # ------------------------------------
+
             else:
                 print("Nessun film trovato.")
         else:
