@@ -57,6 +57,7 @@ def main():
                 print(f"\n=== RISULTATO da {response['replica']} ===")
                 print(f"Titolo: {response['title']}")
                 print(f"Trama:  {response['plot_snippet']}")
+                print(f"Score similarità: {response['similarity_score']:.2f}")
                 print(f"Likes:  {response['votes']}")
                 
                 if input("Ti piace? (s/n): ").lower() == 's':
