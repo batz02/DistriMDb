@@ -24,7 +24,7 @@ Il sistema è progettato come una **Replicated State Machine**:
     * **Aggiornamento:** Quando un voto viene registrato, la replica lo salva su disco e propaga l'aggiornamento agli altri nodi in background.
 4.  **Ricerca Semantica:** Utilizza `scikit-learn` per calcolare la similarità del coseno tra la query dell'utente e le trame dei film.
 
-### Diagramma Architetturale
+### Diagramma Architetturale (con 3 repliche)
 
 ```mermaid
 graph TD
@@ -52,7 +52,7 @@ graph TD
     R3 --- DB
 ```
 
-## 🛠️ Requisiti e Installazione
+## Requisiti e Installazione
 
 ### Prerequisiti
 
@@ -74,7 +74,7 @@ python3 setup_data.py
 
 *Output:* Genera `server_db.pkl` (condiviso dalle repliche) e `client_model.pkl` (usato dal client per vettorizzare le query).
 
-## 💻 Esecuzione
+## Esecuzione
 
 Per testare l'architettura distribuita, apri **tre o più terminali** separati.
 
@@ -118,7 +118,7 @@ L'interfaccia utente per cercare e votare.
 python3 client.py
 ```
 
-## 🧪 Testing
+## Testing
 
 Il progetto include una suite di unit test per verificare la logica di business, la gestione dei file e la resilienza agli errori di rete (tramite Mocking).
 
@@ -128,7 +128,7 @@ Per eseguire i test:
 python3 -m unittest test.py
 ```
 
-## 📂 Struttura dei File
+## Struttura dei File
 
 * `setup_data.py`: Preprocessing dei dati, creazione della matrice TF-IDF.
 * `server.py`: Nodo server. Gestisce le richieste RPC, la persistenza dei voti (`votes_X.json`) e la propagazione degli aggiornamenti agli altri peer.
