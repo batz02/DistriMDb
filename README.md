@@ -62,7 +62,7 @@ graph TD
 pip3 install Pyro5 pandas numpy scikit-learn
 ```
 
-* **Dataset:** Scaricare il file `tmdb_5000_movies.csv` (da [Kaggle](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata?select=tmdb_5000_movies.csv)) e posizionarlo nella cartella principale.
+* **Dataset:** Scaricare il file `tmdb_5000_movies.csv` (da [Kaggle](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata?select=tmdb_5000_movies.csv)) o utilizzare quello presente nella repository e posizionarlo nella cartella principale.
 
 ### Setup Iniziale
 
@@ -134,5 +134,5 @@ python3 -m unittest test.py
 * `server.py`: Nodo server. Gestisce le richieste RPC, la persistenza dei voti (`votes_X.json`) e la propagazione degli aggiornamenti agli altri peer.
 * `client.py`: Client RMI. Gestisce l'input utente, la connessione dinamica alle repliche e la gestione degli errori di connessione.
 * `test.py`: Unit tests con `unittest` e `mock`.
-* `tmdb_5000_movies.csv`: Dataset di input (non incluso nel version control).
+* `tmdb_5000_movies.csv`: Dataset di input.
 
